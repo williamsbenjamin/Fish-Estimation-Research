@@ -1,10 +1,3 @@
-library(tidyverse)
-
-# Data : All Possible Matches
-# The data already has variables for the difference between
-# the variables in cls and in mrip
-tidy_all_matches_docks <- read_csv("data/all_possible_matches_16_17.csv")
-
 # hold all but one variable constant to get distribution of 
 # linking variables
 
@@ -12,7 +5,7 @@ tidy_all_matches_docks <- read_csv("data/all_possible_matches_16_17.csv")
 ## Total Catch
 #######
 
-tidy_all_matches_docks %>%
+n_total.catch <- tidy_all_matches_docks %>%
   filter(nbAnglers == PARTY,
          state == STATE,
          date == return_date_ymd) %>%
@@ -20,116 +13,79 @@ tidy_all_matches_docks %>%
   filter(diff_total_catch != "NA") %>%
   nrow()
 
-tidy_all_matches_docks %>%
+p.agree_total_catch <- tidy_all_matches_docks %>%
   filter(nbAnglers == PARTY,
          state==STATE,
          date == return_date_ymd) %>%
   distinct(departdate,returndate,date_time_mrip,.keep_all = T) %>% 
-  #remove duplicates
   filter(diff_total_catch != "NA" ) %>%
   filter(diff_total_catch == 0 ) %>%
-  nrow()
+  nrow() / 
+  n_total.catch
 
-tidy_all_matches_docks %>%
+p.close_total_catch <- tidy_all_matches_docks %>%
   filter(nbAnglers == PARTY,
          state==STATE,
          date == return_date_ymd) %>%
   distinct(departdate,returndate,date_time_mrip,.keep_all = T) %>% #remove duplicates
   filter(diff_total_catch %in% c(-4:-1,1:4)) %>%
-  nrow()
+  nrow() /
+  n_total.catch
 
-tidy_all_matches_docks %>%
+p.disagree_total_catch <- tidy_all_matches_docks %>%
   filter(nbAnglers == PARTY,
          state==STATE,
          date == return_date_ymd) %>%
   distinct(departdate,returndate,date_time_mrip,.keep_all = T) %>% #remove duplicates
-  filter(diff_total_catch %in% c(-15:-5,5:15)) %>%
-  nrow()
+  filter(diff_total_catch %in% c(-3000:-5,5:9006)) %>%
+  nrow() /
+  n_total.catch
 
-tidy_all_matches_docks %>%
-  filter(nbAnglers == PARTY,
-         state==STATE,
-         date == return_date_ymd) %>%
-  distinct(departdate,returndate,date_time_mrip,.keep_all = T) %>% #remove duplicates
-  filter(diff_total_catch %in% c(-30:-16,16:30)) %>%
-  nrow()
+####
+# Total Release
+####
 
-tidy_all_matches_docks %>%
-  filter(nbAnglers == PARTY,
-         state==STATE,
-         date == return_date_ymd) %>%
-  distinct(departdate,returndate,date_time_mrip,.keep_all = T) %>% #remove duplicates
-  filter(diff_total_catch %in% c(-30000:-31,31:9006)) %>% #everything else
-  nrow()
+n_total.release <- tidy_all_matches_docks %>%
+     filter(nbAnglers == PARTY,
+                       state==STATE,
+                       date == return_date_ymd) %>%
+     distinct(departdate,returndate,date_time_mrip,.keep_all = T) %>%
+     filter(diff_total_release != "NA" ) %>%
+     drop_na(CLS_ID) %>%
+     nrow()
 
-
-#diff_total_release 215 cases
-tidy_all_matches_docks %>%
-  filter(nbAnglers == PARTY,
-         state==STATE,
-         date == return_date_ymd) %>%
-  distinct(departdate,returndate,date_time_mrip,.keep_all = T) %>% #remove duplicates
-  ggplot(aes(diff_total_release))+
-  geom_histogram(bins=10,fill="royalblue4")+
-  theme_economist()
-tidy_all_matches_docks %>%
-  filter(nbAnglers == PARTY,
-         state==STATE,
-         date == return_date_ymd) %>%
-  distinct(departdate,returndate,date_time_mrip,.keep_all = T) %>%
-  filter(diff_total_release != "NA" ) %>%
-  drop_na(CLS_ID) %>%
-  nrow()
-
-tidy_all_matches_docks %>%
+p.agree_total_release <- tidy_all_matches_docks %>%
   filter(nbAnglers == PARTY,
          state==STATE,
          date == return_date_ymd) %>%
   distinct(departdate,returndate,date_time_mrip,.keep_all = T) %>%
   filter(diff_total_release == 0 ) %>%
-  nrow()
+  nrow() /
+  n_total.release
 
-tidy_all_matches_docks %>%
+p.close_total_release <- tidy_all_matches_docks %>%
   filter(nbAnglers == PARTY,
          state==STATE,
          date == return_date_ymd) %>%
   distinct(departdate,returndate,date_time_mrip,.keep_all = T) %>%
   filter(diff_total_release %in% c(-4:-1,1:4)) %>%
-  nrow()
-tidy_all_matches_docks %>%
-  filter(nbAnglers == PARTY,
-         state==STATE,
-         date == return_date_ymd) %>%
-  distinct(departdate,returndate,date_time_mrip,.keep_all = T) %>%
-  filter(diff_total_release %in% c(-15:-5,5:15)) %>%
-  nrow()
-tidy_all_matches_docks %>%
-  filter(nbAnglers == PARTY,
-         state==STATE,
-         date == return_date_ymd) %>%
-  distinct(departdate,returndate,date_time_mrip,.keep_all = T) %>%
-  filter(diff_total_release %in% c(-30:-16,16:30)) %>%
-  nrow()
-tidy_all_matches_docks %>%
-  filter(nbAnglers == PARTY,
-         state==STATE,
-         date == return_date_ymd) %>%
-  distinct(departdate,returndate,date_time_mrip,.keep_all = T) %>%
-  filter(diff_total_release %in% c(-3000:-31,31:300)) %>%
-  nrow()
+  nrow() /
+  n_total.release
 
-##START HERR BENN
-#km_diff, 215 cases
-tidy_all_matches_docks %>%
+p.disagree_total_release <- tidy_all_matches_docks %>%
   filter(nbAnglers == PARTY,
          state==STATE,
          date == return_date_ymd) %>%
-  distinct(departdate,returndate,date_time_mrip,.keep_all = T) %>% #remove duplicates
-  ggplot(aes(km_difference))+
-  geom_histogram(bins=20,fill="royalblue4")+
-  theme_economist()
+  distinct(departdate,returndate,date_time_mrip,.keep_all = T) %>%
+  filter(diff_total_release %in% c(-3000:-5,5:300)) %>%
+  nrow() /
+  n_total.release
 
-tidy_all_matches_docks %>%
+#####
+# KM Distance
+#####
+
+n_total_distance <- tidy_all_matches_docks %>%
   filter(nbAnglers == PARTY,
          state==STATE,
          date == return_date_ymd) %>%
@@ -137,50 +93,36 @@ tidy_all_matches_docks %>%
   filter(km_difference != "NA") %>%
   nrow()
 
-tidy_all_matches_docks %>%
+p.agree_total_distance <- tidy_all_matches_docks %>%
   filter(nbAnglers == PARTY,
          state==STATE,
          date == return_date_ymd) %>%
   distinct(departdate,returndate,date_time_mrip,.keep_all = T) %>%
   filter(between(km_difference,0,25)) %>%
-  nrow()
+  nrow() /
+  n_total_distance
 
-tidy_all_matches_docks %>%
+p.close_total_distance <- tidy_all_matches_docks %>%
   filter(nbAnglers == PARTY,
          state==STATE,
          date == return_date_ymd) %>%
   distinct(departdate,returndate,date_time_mrip,.keep_all = T) %>%
   filter(between(km_difference,25.001,70)) %>%
-  nrow()
+  nrow() /
+  n_total_distance
 
-tidy_all_matches_docks %>%
+p.disagree_total_distance <- tidy_all_matches_docks %>%
   filter(nbAnglers == PARTY,
          state==STATE,
          date == return_date_ymd) %>%
   distinct(departdate,returndate,date_time_mrip,.keep_all = T) %>%
-  filter(between(km_difference,70.001,200)) %>%
-  nrow()
-
-tidy_all_matches_docks %>%
-  filter(nbAnglers == PARTY,
-         state==STATE,
-         date == return_date_ymd) %>%
-  distinct(departdate,returndate,date_time_mrip,.keep_all = T) %>%
-  filter(between(km_difference,200.001,4000)) %>%
-  nrow()
+  filter(between(km_difference,70.001,4000)) %>%
+  nrow() /
+  n_total_distance
 
 #Red Snapper Catch Difference (81 cases)
-tidy_all_matches_docks %>%
-  filter(nbAnglers == PARTY,
-         state==STATE,
-         date == return_date_ymd) %>%
-  mutate(red_diff = `RED SNAPPER_kept` - `RED SNAPPER_claim`) %>%
-  distinct(departdate,returndate,date_time_mrip,.keep_all = T) %>% #remove duplicates
-  ggplot(aes(red_diff))+
-  geom_histogram(bins=10)+
-  theme_economist()
 
-tidy_all_matches_docks %>%
+n_total_rs <- tidy_all_matches_docks %>%
   filter(nbAnglers == PARTY,
          state==STATE,
          date == return_date_ymd) %>%
@@ -189,7 +131,7 @@ tidy_all_matches_docks %>%
   drop_na(red_diff) %>%
   nrow()
 
-tidy_all_matches_docks %>%
+p.agree_total_rs <- tidy_all_matches_docks %>%
   filter(nbAnglers == PARTY,
          state==STATE,
          date == return_date_ymd) %>%
@@ -197,9 +139,10 @@ tidy_all_matches_docks %>%
   distinct(departdate,returndate,date_time_mrip,.keep_all = T) %>% #remove duplicates
   drop_na(red_diff) %>%
   filter(red_diff %in% c(0)) %>%
-  nrow()
+  nrow() /
+  n_total_rs
 
-tidy_all_matches_docks %>%
+p.close_total_rs <- tidy_all_matches_docks %>%
   filter(nbAnglers == PARTY,
          state==STATE,
          date == return_date_ymd) %>%
@@ -207,88 +150,73 @@ tidy_all_matches_docks %>%
   distinct(departdate,returndate,date_time_mrip,.keep_all = T) %>% #remove duplicates
   drop_na(red_diff) %>%
   filter(red_diff %in% c(-5:-1,1:5)) %>%
-  nrow()
+  nrow() /
+  n_total_rs
 
-tidy_all_matches_docks %>%
+p.disagree_total_rs <- tidy_all_matches_docks %>%
   filter(nbAnglers == PARTY,
          state==STATE,
          date == return_date_ymd) %>%
   mutate(red_diff = `RED SNAPPER_kept` - `RED SNAPPER_claim`) %>%
   distinct(departdate,returndate,date_time_mrip,.keep_all = T) %>% #remove duplicates
-  filter(red_diff %in% c(-15:-6,6:15)) %>%
-  nrow()
+  filter(red_diff %in% c(-100:-6,6:100)) %>%
+  nrow() /
+  n_total_rs
 
-tidy_all_matches_docks %>%
+######
+# Number Species Caught Difference
+######
+
+n_total_num_species <- tidy_all_matches_docks %>%
   filter(nbAnglers == PARTY,
          state==STATE,
          date == return_date_ymd) %>%
-  mutate(red_diff = `RED SNAPPER_kept` - `RED SNAPPER_claim`) %>%
-  distinct(departdate,returndate,date_time_mrip,.keep_all = T) %>% #remove duplicates
-  drop_na(red_diff) %>%
-  filter(red_diff %in% c(-100:-16,16:100)) %>%
-  nrow()
-
-
-#Number Species Caught Difference
-tidy_all_matches_docks %>%
-  filter(nbAnglers == PARTY,
-         state==STATE,
-         date == return_date_ymd) %>%
-  mutate(spec_caught_diff = reported_species_kept_cls - reported_species_claim_mrip) %>%
-  distinct(departdate,returndate,date_time_mrip,.keep_all = T) %>% #remove duplicates
-  ggplot(aes(spec_caught_diff))+
-  geom_histogram(bins=15)+
-  theme_economist()
-#frequencies - 215 cases
-tidy_all_matches_docks %>%
-  filter(nbAnglers == PARTY,
-         state==STATE,
-         date == return_date_ymd) %>%
-  mutate(spec_caught_diff = reported_species_kept_cls - reported_species_claim_mrip) %>%
-  distinct(departdate,returndate,date_time_mrip,.keep_all = T) %>% #remove duplicates
+  mutate(spec_caught_diff = reported_species_kept_cls - 
+           reported_species_claim_mrip) %>%
+  distinct(departdate,returndate,date_time_mrip,
+           .keep_all = T) %>% 
   drop_na(spec_caught_diff) %>%
   nrow()
 
-tidy_all_matches_docks %>%
+p.agree_total_num_species <- tidy_all_matches_docks %>%
   filter(nbAnglers == PARTY,
          state==STATE,
          date == return_date_ymd) %>%
-  mutate(spec_caught_diff = reported_species_kept_cls - reported_species_claim_mrip) %>%
-  distinct(departdate,returndate,date_time_mrip,.keep_all = T) %>% #remove duplicates
+  mutate(spec_caught_diff = reported_species_kept_cls - 
+           reported_species_claim_mrip) %>%
+  distinct(departdate,returndate,date_time_mrip,
+           .keep_all = T) %>% #remove duplicates
   filter(spec_caught_diff %in% c(0)) %>%
-  nrow()
+  nrow() /
+  n_total_num_species
 
-tidy_all_matches_docks %>%
+p.close_total_num_species <- tidy_all_matches_docks %>%
   filter(nbAnglers == PARTY,
          state==STATE,
          date == return_date_ymd) %>%
-  mutate(spec_caught_diff = reported_species_kept_cls - reported_species_claim_mrip) %>%
-  distinct(departdate,returndate,date_time_mrip,.keep_all = T) %>% #remove duplicates
+  mutate(spec_caught_diff = reported_species_kept_cls - 
+           reported_species_claim_mrip) %>%
+  distinct(departdate,returndate,date_time_mrip,
+           .keep_all = T) %>% 
   filter(spec_caught_diff %in% c(-2,-1,1,2)) %>%
-  nrow()
+  nrow() /
+  n_total_num_species
 
-tidy_all_matches_docks %>%
+p.disagree_total_num_species <- tidy_all_matches_docks %>%
   filter(nbAnglers == PARTY,
          state==STATE,
          date == return_date_ymd) %>%
   mutate(spec_caught_diff = reported_species_kept_cls - reported_species_claim_mrip) %>%
   distinct(departdate,returndate,date_time_mrip,.keep_all = T) %>% #remove duplicates
   filter(spec_caught_diff %in% c(-10:-3,3:10)) %>%
-  nrow()
+  nrow() /
+  n_total_num_species
 
-#Number Species Released Difference
-tidy_all_matches_docks %>%
-  filter(nbAnglers == PARTY,
-         state==STATE,
-         date == return_date_ymd) %>%
-  mutate(spec_rel_diff = reported_species_released_cls - reported_species_release_mrip) %>%
-  distinct(departdate,returndate,date_time_mrip,.keep_all = T) %>% #remove duplicates
-  ggplot(aes(spec_rel_diff))+
-  geom_histogram(bins=15)+
-  theme_economist()
+#####
+# Number Species Released Difference
+#####
 
-#frequencies - 215 cases
-tidy_all_matches_docks %>%
+n_total_num_species_rel <- tidy_all_matches_docks %>%
   filter(nbAnglers == PARTY,
          state==STATE,
          date == return_date_ymd) %>%
@@ -297,46 +225,40 @@ tidy_all_matches_docks %>%
   drop_na(spec_rel_diff) %>%
   nrow()
 
-tidy_all_matches_docks %>%
+p.agree_total_num_species_rel <- tidy_all_matches_docks %>%
   filter(nbAnglers == PARTY,
          state==STATE,
          date == return_date_ymd) %>%
   mutate(spec_rel_diff = reported_species_released_cls - reported_species_release_mrip) %>%
   distinct(departdate,returndate,date_time_mrip,.keep_all = T) %>% #remove duplicates
   filter(spec_rel_diff %in% c(0)) %>%
-  nrow()
+  nrow() /
+  n_total_num_species_rel
 
-tidy_all_matches_docks %>%
+p.close_total_num_species_rel <- tidy_all_matches_docks %>%
   filter(nbAnglers == PARTY,
          state==STATE,
          date == return_date_ymd) %>%
   mutate(spec_rel_diff = reported_species_released_cls - reported_species_release_mrip) %>%
   distinct(departdate,returndate,date_time_mrip,.keep_all = T) %>% #remove duplicates
   filter(spec_rel_diff %in% c(-2,-1,1,2)) %>%
-  nrow()
+  nrow()/
+  n_total_num_species_rel
 
-tidy_all_matches_docks %>%
+p.disagree_total_num_spec_rel <- tidy_all_matches_docks %>%
   filter(nbAnglers == PARTY,
          state==STATE,
          date == return_date_ymd) %>%
   mutate(spec_rel_diff = reported_species_released_cls - reported_species_release_mrip) %>%
   distinct(departdate,returndate,date_time_mrip,.keep_all = T) %>% #remove duplicates
   filter(spec_rel_diff %in% c(-10:-3,3:10)) %>%
-  nrow()
+  nrow()/
+  n_total_num_species_rel
 
-#hold all but party equal 
-#not many observations like this
-#difference in number of anglers (35 cases)
-tidy_all_matches_docks %>%
-  filter(total_kept_cls == total_claim_mrip,
-         state==STATE,
-         date == return_date_ymd) %>%
-  distinct(departdate,returndate,date_time_mrip,INTSITE,.keep_all = T)  %>% 
-  ggplot(aes(diff_cls_mrip_anglers)) +
-  geom_histogram(bins=10) +
-  theme_economist()
-
-tidy_all_matches_docks %>%
+#####
+# Number of anglers
+#####
+n_num_anglers <- tidy_all_matches_docks %>%
   filter(total_kept_cls == total_claim_mrip,
          state==STATE,
          date == return_date_ymd) %>%
@@ -344,48 +266,42 @@ tidy_all_matches_docks %>%
   drop_na(diff_cls_mrip_anglers) %>% 
   nrow()
 
-tidy_all_matches_docks %>%
+p.agree_num_anglers <- tidy_all_matches_docks %>%
   filter(total_kept_cls == total_claim_mrip,
          state==STATE,
          date == return_date_ymd) %>%
   distinct(departdate,returndate,date_time_mrip,strat_id,INTSITE,.keep_all = T)  %>% 
   drop_na(diff_cls_mrip_anglers) %>%
   filter(diff_cls_mrip_anglers %in% c(0)) %>% 
-  nrow()
+  nrow() / 
+  n_num_anglers
 
-tidy_all_matches_docks %>%
+p.close_num_anglers <- tidy_all_matches_docks %>%
   filter(total_kept_cls == total_claim_mrip,
          state==STATE,
          date == return_date_ymd) %>%
   distinct(departdate,returndate,date_time_mrip,strat_id,INTSITE,.keep_all = T)  %>% 
   drop_na(diff_cls_mrip_anglers) %>%
   filter(diff_cls_mrip_anglers %in% c(-1,1)) %>% 
-  nrow()
+  nrow()/ 
+  n_num_anglers
 
 
-tidy_all_matches_docks %>%
+p.disagree_num_anglers <- tidy_all_matches_docks %>%
   filter(total_kept_cls == total_claim_mrip,
          state==STATE,
          date == return_date_ymd) %>%
   distinct(departdate,returndate,date_time_mrip,strat_id,INTSITE,.keep_all = T)  %>% 
   drop_na(diff_cls_mrip_anglers) %>%
   filter(diff_cls_mrip_anglers %in% c(-15:-2,2:15)) %>% 
-  nrow()
+  nrow()/ 
+  n_num_anglers
 
-#hold all but date equal 
-#look at difference in date (62 cases)
-tidy_all_matches_docks %>%
-  filter(total_kept_cls == total_claim_mrip,
-         PARTY == nbAnglers,
-         state==STATE) %>%
-  mutate(red_diff = `RED SNAPPER_kept` - `RED SNAPPER_claim`) %>%
-  distinct(departdate,returndate,date_time_mrip,.keep_all = T)  %>% 
-  mutate(date_diff=as.numeric(return_date_ymd - date)) %>%
-  ggplot(aes(date_diff)) +
-  geom_histogram(bins=10) +
-  theme_economist()
+#####
+# Date
+#####
 
-tidy_all_matches_docks %>%
+n_total_date <- tidy_all_matches_docks %>%
   filter(total_kept_cls == total_claim_mrip,
          PARTY == nbAnglers,
          state==STATE) %>%
@@ -395,7 +311,7 @@ tidy_all_matches_docks %>%
   filter(date_diff > -2) %>% #filter such that the report is
   nrow() #62 cases           #at most 2 days before the sample
 
-tidy_all_matches_docks %>%
+p.agree_date <- tidy_all_matches_docks %>%
   filter(total_kept_cls == total_claim_mrip,
          PARTY == nbAnglers,
          state==STATE) %>%
@@ -404,10 +320,10 @@ tidy_all_matches_docks %>%
   drop_na(date_diff) %>% 
   filter(date_diff >= -2) %>% 
   filter(date_diff == 0) %>%
-  nrow()
+  nrow() /
+  n_total_date
 
-
-tidy_all_matches_docks %>%
+p.close_date <- tidy_all_matches_docks %>%
   filter(total_kept_cls == total_claim_mrip,
          PARTY == nbAnglers,
          state==STATE) %>%
@@ -416,9 +332,10 @@ tidy_all_matches_docks %>%
   drop_na(date_diff) %>%
   filter(date_diff > -2) %>% 
   filter(date_diff %in% c(-2,-1,1,2)) %>%
-  nrow()
+  nrow() /
+  n_total_date
 
-tidy_all_matches_docks %>%
+p.disagree_date <- tidy_all_matches_docks %>%
   filter(total_kept_cls == total_claim_mrip,
          PARTY == nbAnglers,
          state==STATE) %>%
@@ -426,51 +343,5 @@ tidy_all_matches_docks %>%
   mutate(date_diff=as.numeric(return_date_ymd - date)) %>%
   drop_na(date_diff) %>% 
   filter(date_diff %in% c(3:100)) %>%
-  nrow()
-
-
-#hold all but STATE equal 
-tidy_all_matches_docks %>%
-  filter(total_kept_cls == total_claim_mrip,
-         PARTY == nbAnglers,
-         date == return_date_ymd)  %>%
-  mutate(red_diff = `RED SNAPPER_kept` - `RED SNAPPER_claim`) %>%
-  distinct(departdate,returndate,date_time_mrip,.keep_all = T)  %>% 
-  ggplot(aes(state,fill=STATE)) +
-  geom_bar() +
-  theme_economist()
-
-tidy_all_matches_docks %>%
-  filter(total_kept_cls == total_claim_mrip,
-         PARTY == nbAnglers,
-         date == return_date_ymd)  %>%
-  mutate(red_diff = `RED SNAPPER_kept` - `RED SNAPPER_claim`) %>%
-  distinct(departdate,returndate,date_time_mrip,.keep_all = T)  %>% 
-  ggplot(aes(red_diff)) +
-  geom_histogram() +
-  theme_economist()
-
-#all but red snapper equal #very few obs
-tidy_all_matches_docks %>%
-  filter(total_kept_cls == total_claim_mrip,
-         nbAnglers == PARTY,
-         state==STATE,
-         date == return_date_ymd) %>%
-  mutate(red_diff = `RED SNAPPER_kept` - `RED SNAPPER_claim`) %>%
-  distinct(departdate,returndate,date_time_mrip,.keep_all = T)  %>% #remove duplicates
-  ggplot(aes(red_diff)) +
-  geom_histogram(bins=10) +
-  theme_economist()
-
-#relax it a bit
-tidy_all_matches_docks %>%
-  filter(total_kept_cls == total_claim_mrip,
-         nbAnglers == PARTY,
-         state==STATE) %>%
-  mutate(red_diff = `RED SNAPPER_kept` - `RED SNAPPER_claim`) %>%
-  distinct(departdate,returndate,date_time_mrip,.keep_all = T)  %>% #remove duplicates
-  ggplot(aes(red_diff)) +
-  geom_histogram(bins=10) +
-  theme_economist()
-
-
+  nrow() /
+  n_total_date
