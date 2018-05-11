@@ -19,7 +19,15 @@ mrip_with_clsid <- mrip_with_clsid %>%
 
 nrow(mrip_with_clsid)
 
-cool <- c(17:102,104:105)
+cool <- which(
+  names(mrip_with_clsid) %in% (
+    mrip_with_clsid %>%
+      select(ends_with("claim") ,
+             ends_with("release")) %>%
+      colnames()
+  )
+)
+  
 mrip_with_clsid[,cool] = apply(mrip_with_clsid[,cool],2,function(x)as.numeric(x))  
 is.zero.na <- function(x){
   x == 0 | is.na(x)
@@ -78,7 +86,14 @@ mrip_with_clsid <- mrip_with_clsid%>%
 cls_17_only <- cls_tidy2_17
 nrow(cls_17_only)
 
-colz <- c(22:109)
+colz <- which(
+  names(cls_17_only) %in% (
+    cls_17_only %>%
+      select(ends_with("kept") ,
+             ends_with("released")) %>%
+      colnames()
+  )
+)
 cls_17_only[,colz] = apply(cls_17_only[,colz],2,function(x)as.numeric(x))  
 is.zero.na <- function(x){
   x == 0 | is.na(x)
@@ -102,7 +117,7 @@ bind_cols(
 ###Use all possible matches dataset
 
 #Maybe just do this for each linking variable, and have a different 
-#score vector for each variable, then add those as columns to the dataset (not necessary)
+#score vector for each variable, then add those as columns to the dataset 
 # then add them all up for each row to get the score
 
 

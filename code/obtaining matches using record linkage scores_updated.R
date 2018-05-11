@@ -28,7 +28,8 @@ tidy_all_matches_docks_rl %>%
   #View()
   nrow()
 
-#need to filter it so that only one cls report is matched up with an mrip trip
+#need to filter it so that only one cls report 
+#is matched with an mrip trip
 one_per_first <- tidy_all_matches_docks_rl %>%
   group_by(CLS_ID,date_time_mrip) %>%
   top_n(n=1,rl_score) %>%
