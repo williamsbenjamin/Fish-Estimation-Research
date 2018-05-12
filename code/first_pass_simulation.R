@@ -1,9 +1,20 @@
 
 #Simulate Population for 2017
 
+# Need to simulate variables for estimation
+# and variables for record linkage
+
+# Linking variables :
+# Anglers, Date, Red Snapper catch/release,
+# Lat/Long, Total Catch, Total Release, 
+# Number Species Caught/Released
+
+
+
 library(tidyverse)
 library(truncdist)
 library(stringr)
+
 #The Data, make sure psu_id is a character
 mrip <- read_csv("data/mrip_tidy2_17.csv",
                  col_types = cols(psu_id = col_character()))
