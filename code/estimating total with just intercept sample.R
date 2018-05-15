@@ -1,6 +1,8 @@
 #Try estimating total with just the intercept sample
 
 library(tidyverse)
+library(survey)
+
 mrip_16 <- read_csv("data/mrip_tidy2_16.csv")
 mrip_17 <- read_csv("data/mrip_tidy2_17.csv")
 is.zero.na <- function(x){
@@ -37,9 +39,6 @@ mrip_17 <- mrip_17 %>%
         reported_species_release_mrip = rowSums(!is.zero.na(.))
       )
   )
-
-
-library(survey)
 
 
 mrip16_surv <- svydesign(~psu_id,

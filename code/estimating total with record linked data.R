@@ -2,6 +2,7 @@ library(tidyverse)
 library(ggthemes)
 library(lubridate)
 library(survey)
+library(haven)
 #matches
 tidy_all_matches_one_per <- read_csv("data/tidy_all_matches_rl_one_per.csv")
 #mrip from 2016 and 2017
@@ -166,9 +167,11 @@ mrip_full2 <- mrip_full2 %>%
 mrip_cls_all2 <- mrip_full2 #mrip_full contains all mrip and cls info
 
 mrip_all_16_2 <- filter(mrip_cls_all2,year(date)==2016)
-cls_16_2 <- cls_all %>% filter(year(return_date_ymd)==2016)
+cls_16_2 <- cls_all %>% 
+  filter(year(return_date_ymd)==2016)
 mrip_all_17_2 <- filter(mrip_cls_all2,year(date)==2017)
-cls_17_2 <- cls_all %>% filter(year(return_date_ymd)==2017)
+cls_17_2 <- cls_all %>% 
+  filter(year(return_date_ymd)==2017)
 
 
 #2016 
