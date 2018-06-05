@@ -6,26 +6,26 @@ est_df <- tibble(Year = c(2016,2016,2016,
                           2017,2017,2017),
                  Method = c("Naive","All Links","Score > 4",
                             "Naive","All Links","Score > 4"),
-                 t_yp = c(513917.8,759083.8,1038751,
-                          510379,629369.6,851366.9),
-                 se_t_yp = c(72649.59,86495.37,136579.9,
-                             117068.1,91261.79,139327),
-                 t_yc = c(209766.6,1158165,1444072,
-                          124794.6,559709.1,674537.7),
-                 se_t_yc = c(42583.97,189627.3,264127.3,
-                             13989.25,103460.6,146828.6),
-                 t_y2 = c(200730.7,817137.7,1086039,
-                          127488.1,615210,821542.3),
-                 se_t_y2 = c(33005.14,86819.84,136304.6,
-                             17190.51,92452.01,143442.7),
-                 t_ydiff = c(303272,4280062,4423828,
-                             161274.4,4016836,4191040),
+                 t_yp = c(513917.8,761403.4,1038751,
+                          510379,634098.3,851366.9),
+                 se_t_yp = c(72649.59,86990.25,136579.9,
+                             117068.1,92599.96,139327),
+                 t_yc = c(209766.6,1159029,1444072,
+                          124794.6,560643.9,674537.7),
+                 se_t_yc = c(42583.97,189938.8,264127.3,
+                             13989.25,103833.8,146828.6),
+                 t_y2 = c(200730.7,819202.5,1086039,
+                          127488.1,619192,821542.3),
+                 se_t_y2 = c(33005.14,87305.07,136304.6,
+                             17190.51,93732.59,143442.7),
+                 t_ydiff = c(303272,4280583,4423828,
+                             161274.4,4018496,4191040),
                  se_tydiff = c(147476,419082,425842,
-                               57737,467494,482399),
-                 t_ynew = c(1631437,3982547,4274074,
-                            1343433,3883508,4149248),
-                 se_t_ynew = c(203559,302208,346501,
-                               361803,464786,483072))
+                               57737,467535,482399),
+                 t_ynew = c(1631437,3985797,4274074,
+                            1343433,3888086,4149248),
+                 se_t_ynew = c(203559,302157,346501,
+                               361803,464877,483072))
 estimates_only <- est_df %>% 
   select(-se_t_yp,-se_t_yc,-se_t_y2,-se_tydiff,-se_t_ynew) %>% 
   gather(t_yp,t_yc,t_y2,t_ydiff,t_ynew,key="Estimator",
@@ -37,6 +37,7 @@ se_only <- est_df %>%
          key="Estimator",value="SE_Estimate") %>% 
   mutate(Estimator = c(rep("t_yp",6),rep("t_yc",6),rep("t_y2",6),
                          rep("t_ydiff",6),rep("t_ynew",6)))
+
 
 estimates_plus_se <- inner_join(estimates_only,
                                 se_only,
@@ -74,6 +75,45 @@ estimates_plus_se_bias %>%
   geom_col(position = position_dodge()) +
   facet_wrap(~Year,nrow=2)
 
+#liu's estimators only
+estimates_plus_se_bias %>% 
+  ggplot(aes(factor(Estimator),Relative_Bias,fill = Method)) +
+  geom_col(position = position_dodge()) +
+  facet_wrap(~Year,nrow=2) +
+  scale_x_discrete(limits = c("t_yp","t_yc","t_y2"),
+                   labels=expression(t[yp],t[yc],t[y2])) +
+  ylab("Relative Bias") +
+  theme(legend.text = element_text(size = 20, face = "bold"),
+        legend.title = element_text(size = 20, face = "bold"),
+        plot.title = element_text(size=20,hjust=0.5),
+        axis.title = element_text(size=20),
+        axis.title.x = element_blank(),
+        axis.text.x = element_text(size=20),
+        legend.position = "top")
+ggsave("plots/RB_liu_prospectus.jpg")
+ggsave("C:/Users/32443181/Box Sync/Research/Dissertation/Prospectus/RB_liu_prospectus.jpg",
+       height=5, width=8.5, units='in', dpi=600)
+
+#new estimators only 
+estimates_plus_se_bias %>% 
+  ggplot(aes(factor(Estimator),Relative_Bias,fill = Method)) +
+  geom_col(position = position_dodge()) +
+  facet_wrap(~Year,nrow=2) +
+  scale_x_discrete(limits = c("t_ydiff","t_ynew"),
+                   labels=expression(t[diff],t[new])) +
+  ylab("Relative Bias") +
+  theme(legend.text = element_text(size = 20, face = "bold"),
+                    legend.title = element_text(size = 20, face = "bold"),
+                    plot.title = element_text(size=20,hjust=0.5),
+                    axis.title = element_text(size=20),
+                    axis.text.x = element_text(size = 20),
+                    axis.title.x = element_blank(),
+                    legend.position = "top") 
+ggsave("plots/RB_new_prospectus.jpg")
+ggsave("C:/Users/32443181/Box Sync/Research/Dissertation/Prospectus/RB_new_prospectus.jpg",
+       height=5, width=8.5, units='in', dpi=600)
+
+#all estimators
 estimates_plus_se_bias %>% 
   ggplot(aes(factor(Estimator),Relative_Bias,fill = Method)) +
   geom_col(position = position_dodge()) +
@@ -81,17 +121,59 @@ estimates_plus_se_bias %>%
   scale_x_discrete(limits = c("t_yp","t_yc","t_y2",
                               "t_ydiff","t_ynew"),
                    labels=expression(t[yp],t[yc],t[y2],
-                                     t[ydiff],t[ynew])) +
+                                     t[diff],t[new])) +
   ylab("Relative Bias") +
   xlab(NULL) +
   theme(legend.text = element_text(size = 16, face = "bold"),
         legend.title = element_blank(),
         legend.position = "top") 
-ggsave("plots/RB_prospectus.jpg")
-ggsave("C:/Users/32443181/Box Sync/Research/Dissertation/Prospectus/RB_prospectus.jpg",
+ggsave("plots/RB_all_prospectus.jpg")
+ggsave("C:/Users/32443181/Box Sync/Research/Dissertation/Prospectus/RB_all_prospectus.jpg",
         height=5, width=8.5, units='in', dpi=600)
 
+#Pseudo-MSE 
 
+#liu's estimators only
+estimates_plus_se_bias %>%
+  ggplot(aes(Estimator, MSE, fill = Method)) +
+  geom_col(position = position_dodge()) +
+  facet_wrap( ~ Year, nrow = 2) +
+  scale_x_discrete(
+    limits = c("t_yp", "t_yc", "t_y2"),
+    labels = expression(t[yp], t[yc], t[y2])) +
+  ylab("Pseudo - MSE") +
+  theme(legend.text = element_text(size = 20, face = "bold"),
+        legend.title = element_text(size = 20, face = "bold"),
+        plot.title = element_text(size=20,hjust=0.5),
+        axis.title.y = element_text(size=20),
+        axis.title.x = element_blank(),
+        axis.text.x = element_text(size=20),
+        legend.position = "top")
+
+ggsave("plots/Pseudo_MSE_liu_prospectus.jpg")
+ggsave("C:/Users/32443181/Box Sync/Research/Dissertation/Prospectus/Pseudo_MSE_liu_prospectus.jpg",
+       height=5, width=8.5, units='in', dpi=600)
+#new estimators only
+estimates_plus_se_bias %>%
+  ggplot(aes(Estimator, MSE, fill = Method)) +
+  geom_col(position = position_dodge()) +
+  facet_wrap( ~ Year, nrow = 2) +
+  scale_x_discrete(
+    limits = c("t_ydiff", "t_ynew"),
+    labels = expression(t[diff], t[new])) +
+  ylab("Pseudo - MSE") +
+  theme(legend.text = element_text(size = 20, face = "bold"),
+        legend.title = element_text(size = 20, face = "bold"),
+        plot.title = element_text(size=20,hjust=0.5),
+        axis.title.y = element_text(size=20),
+        axis.title.x = element_blank(),
+        axis.text.x = element_text(size=20),
+        legend.position = "top")
+
+ggsave("plots/Pseudo_MSE_new_prospectus.jpg")
+ggsave("C:/Users/32443181/Box Sync/Research/Dissertation/Prospectus/Pseudo_MSE_new_prospectus.jpg",
+       height=5, width=8.5, units='in', dpi=600)
+#all estimators
 estimates_plus_se_bias %>%
   ggplot(aes(Estimator, MSE, fill = Method)) +
   geom_col(position = position_dodge()) +
@@ -108,6 +190,6 @@ estimates_plus_se_bias %>%
     legend.title = element_blank(),
     legend.position = "top")
 
-ggsave("plots/Pseudo_MSE_prospectus.jpg")
-ggsave("C:/Users/32443181/Box Sync/Research/Dissertation/Prospectus/Pseudo_MSE_prospectus.jpg",
+ggsave("plots/Pseudo_MSE_all_prospectus.jpg")
+ggsave("C:/Users/32443181/Box Sync/Research/Dissertation/Prospectus/Pseudo_MSE_all_prospectus.jpg",
        height=5, width=8.5, units='in', dpi=600)
