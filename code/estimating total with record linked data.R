@@ -4,10 +4,13 @@ library(lubridate)
 library(survey)
 library(haven)
 #matches
-tidy_all_matches_one_per <- read_csv("data/tidy_all_matches_rl_one_per.csv")
+tidy_all_matches_one_per <- read_csv("data/tidy_all_matches_rl_one_per.csv",
+                                     col_types=cols(psu_id = col_character()))
 #mrip from 2016 and 2017
-mrip_tidy2_16 <- read_csv("data/mrip_tidy2_16.csv")
-mrip_tidy2_17 <- read_csv("data/mrip_tidy2_17.csv")
+mrip_tidy2_16 <- read_csv("data/mrip_tidy2_16.csv",
+                          col_types=cols(psu_id = col_character()))
+mrip_tidy2_17 <- read_csv("data/mrip_tidy2_17.csv",
+                          col_types=cols(psu_id = col_character()))
 #CLS from 2016 and 2017
 cls_tidy2_17 <- read_csv("data/cls_tidy2_17.csv") #includes 2016 and 2017
 
@@ -147,7 +150,7 @@ tynew.nr.17[[1]] + sum(cls_17$total_kept_cls,na.rm=T)
 
 
 tidy_all_score_gt_3 <- tidy_all_matches_one_per %>%
-  filter(rl_score > 4)
+  filter(rl_score > 15)
 mrip_non_rep2 <- mrip_all %>% #take out the matches from mrip_all
   anti_join(tidy_all_score_gt_3,by="date_time_mrip") 
 

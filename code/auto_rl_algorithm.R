@@ -275,7 +275,32 @@ for(s in 1:nrow(tidy_all_matches_docks)) {
     (score_diff_report_distance[s] <- log(p.disagree_total_distance))
 }
 
+#Add blocking variables as linking variables
+#Difference in CLS_ID
+score_cls_id <- c()
+for(s in 1:nrow(tidy_all_matches_docks)) {
+    score_cls_id[s] <-
+      -log(
+        sum(
+          tidy_all_matches_docks$CLS_ID ==
+            tidy_all_matches_docks$CLS_ID[s]
+        ) /
+          nrow(tidy_all_matches_docks)
+      )
+}
 
+#Difference in wave_year
+score_wave_yr <- c()
+for(s in 1:nrow(tidy_all_matches_docks)) {
+  score_wave_yr[s] <-
+    -log(
+      sum(
+        tidy_all_matches_docks$wave_year ==
+          tidy_all_matches_docks$wave_year[s]
+      ) /
+        nrow(tidy_all_matches_docks)
+    )
+}
 ##Add scores onto tidy_all_matches_docks
 
 tidy_all_matches_docks_rl <- tidy_all_matches_docks %>%
@@ -287,7 +312,8 @@ tidy_all_matches_docks_rl <- tidy_all_matches_docks %>%
     score_diff_total_catch = score_diff_total_catch,
     score_diff_total_release = score_diff_total_release,
     score_species_caught = score_species_caught,
-    score_species_released = score_species_released
+    score_species_released = score_species_released,
+    score_cls_id = score_cls_id
   ) %>%
   mutate(
     rl_score = rowSums(
@@ -299,6 +325,7 @@ tidy_all_matches_docks_rl <- tidy_all_matches_docks %>%
         score_diff_total_catch,
         score_diff_total_release,
         score_species_caught,
-        score_species_released
+        score_species_released,
+        score_cls_id
       ),na.rm = T))
 write_csv(tidy_all_matches_docks_rl,"data/tidy_all_matches_docks_rl.csv")

@@ -4,28 +4,28 @@ library(tidyverse)
 
 est_df <- tibble(Year = c(2016,2016,2016,
                           2017,2017,2017),
-                 Method = c("Naive","All Links","Score > 4",
-                            "Naive","All Links","Score > 4"),
-                 t_yp = c(513917.8,761403.4,1038751,
-                          510379,634098.3,851366.9),
-                 se_t_yp = c(72649.59,86990.25,136579.9,
-                             117068.1,92599.96,139327),
-                 t_yc = c(209766.6,1159029,1444072,
-                          124794.6,560643.9,674537.7),
-                 se_t_yc = c(42583.97,189938.8,264127.3,
-                             13989.25,103833.8,146828.6),
-                 t_y2 = c(200730.7,819202.5,1086039,
-                          127488.1,619192,821542.3),
-                 se_t_y2 = c(33005.14,87305.07,136304.6,
-                             17190.51,93732.59,143442.7),
-                 t_ydiff = c(303272,4280583,4423828,
-                             161274.4,4018496,4191040),
-                 se_tydiff = c(147476,419082,425842,
-                               57737,467535,482399),
-                 t_ynew = c(1631437,3985797,4274074,
-                            1343433,3888086,4149248),
-                 se_t_ynew = c(203559,302157,346501,
-                               361803,464877,483072))
+                 Method = c("Naive","All Links","Score > 15",
+                            "Naive","All Links","Score > 15"),
+                 t_yp = c(513917.8,804394.3,2399433,
+                          510379,667454.4,2262103),
+                 se_t_yp = c(72649.59,116941.4,640454,
+                             117068.1,123522.9,687625),
+                 t_yc = c(209766.6,1206420,2688762,
+                          124794.6,568713.5,1212142),
+                 se_t_yc = c(42583.97,236450.8,888799,
+                             13989.25,129968.3,428780.6),
+                 t_y2 = c(200730.7,860537.4,2417563,
+                          127488.1,647701.5,2163555),
+                 se_t_y2 = c(33005.14,118015,641144,
+                             17190.51,126567.5,695749.1),
+                 t_ydiff = c(303272,4308058,4686584,
+                             161274.4,4032602,4558097),
+                 se_tydiff = c(147476,343990,317341,
+                               57737,466800,507361),
+                 t_ynew = c(1631437,4012434,4554284,
+                            1343433,3916001,4501759),
+                 se_t_ynew = c(203559,286108,305927,
+                               361803,466339,507852))
 estimates_only <- est_df %>% 
   select(-se_t_yp,-se_t_yc,-se_t_y2,-se_tydiff,-se_t_ynew) %>% 
   gather(t_yp,t_yc,t_y2,t_ydiff,t_ynew,key="Estimator",
@@ -91,7 +91,7 @@ estimates_plus_se_bias %>%
         axis.text.x = element_text(size=20),
         legend.position = "top")
 ggsave("plots/RB_liu_prospectus.jpg")
-ggsave("C:/Users/32443181/Box Sync/Research/Dissertation/Prospectus/RB_liu_prospectus.jpg",
+ggsave("C:/Users/32443181/Box Sync/Research/Dissertation/Thesis/RB_liu_prospectus.jpg",
        height=5, width=8.5, units='in', dpi=600)
 
 #new estimators only 
@@ -110,7 +110,7 @@ estimates_plus_se_bias %>%
                     axis.title.x = element_blank(),
                     legend.position = "top") 
 ggsave("plots/RB_new_prospectus.jpg")
-ggsave("C:/Users/32443181/Box Sync/Research/Dissertation/Prospectus/RB_new_prospectus.jpg",
+ggsave("C:/Users/32443181/Box Sync/Research/Dissertation/Thesis/RB_new_prospectus.jpg",
        height=5, width=8.5, units='in', dpi=600)
 
 #all estimators
@@ -128,7 +128,7 @@ estimates_plus_se_bias %>%
         legend.title = element_blank(),
         legend.position = "top") 
 ggsave("plots/RB_all_prospectus.jpg")
-ggsave("C:/Users/32443181/Box Sync/Research/Dissertation/Prospectus/RB_all_prospectus.jpg",
+ggsave("C:/Users/32443181/Box Sync/Research/Dissertation/Thesis/RB_all_prospectus.jpg",
         height=5, width=8.5, units='in', dpi=600)
 
 #Pseudo-MSE 
@@ -151,7 +151,7 @@ estimates_plus_se_bias %>%
         legend.position = "top")
 
 ggsave("plots/Pseudo_MSE_liu_prospectus.jpg")
-ggsave("C:/Users/32443181/Box Sync/Research/Dissertation/Prospectus/Pseudo_MSE_liu_prospectus.jpg",
+ggsave("C:/Users/32443181/Box Sync/Research/Dissertation/Thesis/Pseudo_MSE_liu_prospectus.jpg",
        height=5, width=8.5, units='in', dpi=600)
 #new estimators only
 estimates_plus_se_bias %>%
@@ -171,7 +171,7 @@ estimates_plus_se_bias %>%
         legend.position = "top")
 
 ggsave("plots/Pseudo_MSE_new_prospectus.jpg")
-ggsave("C:/Users/32443181/Box Sync/Research/Dissertation/Prospectus/Pseudo_MSE_new_prospectus.jpg",
+ggsave("C:/Users/32443181/Box Sync/Research/Dissertation/Thesis/Pseudo_MSE_new_prospectus.jpg",
        height=5, width=8.5, units='in', dpi=600)
 #all estimators
 estimates_plus_se_bias %>%
@@ -191,5 +191,5 @@ estimates_plus_se_bias %>%
     legend.position = "top")
 
 ggsave("plots/Pseudo_MSE_all_prospectus.jpg")
-ggsave("C:/Users/32443181/Box Sync/Research/Dissertation/Prospectus/Pseudo_MSE_all_prospectus.jpg",
+ggsave("C:/Users/32443181/Box Sync/Research/Dissertation/Thesis/Pseudo_MSE_all_prospectus.jpg",
        height=5, width=8.5, units='in', dpi=600)

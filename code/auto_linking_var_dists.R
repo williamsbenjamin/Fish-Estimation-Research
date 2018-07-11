@@ -345,3 +345,4 @@ p.disagree_date <- tidy_all_matches_docks %>%
   filter(date_diff %in% c(3:100)) %>%
   nrow() /
   n_total_date
+  

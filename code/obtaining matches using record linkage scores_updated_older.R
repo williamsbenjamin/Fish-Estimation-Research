@@ -193,31 +193,31 @@ nrow(tidy_all_matches_one_per)
 #look at the distribution of the scores
 tidy_all_matches_one_per %>%
   ggplot(aes(rl_score)) +
-  geom_histogram(bins=40) +
+  geom_histogram(bins = 38) +
   xlab("Score") +
   ylab(NULL) +
   #theme_economist() +
   theme(axis.title.x = element_text(size=16),
         axis.title.y = element_text(size=16))
-ggsave("C:/Users/32443181/Box Sync/Research/Dissertation/Prospectus/record_linkage_scores_all.jpg",
+ggsave("C:/Users/32443181/Box Sync/Research/Dissertation/Thesis/record_linkage_scores_all.jpg",
        height=5, width=8.5, units='in', dpi=600)
 
 #only scores greater than 2
 tidy_all_matches_one_per %>%
   filter(rl_score > 2) %>% 
   ggplot(aes(rl_score)) +
-  geom_histogram(bins=28) +
+  geom_histogram(bins= 28) +
   xlab("Score") +
   ylab(NULL) +
   #theme_economist() +
   theme(axis.title.x = element_text(size=16),
         axis.title.y = element_text(size=16))
-ggsave("C:/Users/32443181/Box Sync/Research/Dissertation/Prospectus/record_linkage_scores_gt2.jpg",
+ggsave("C:/Users/32443181/Box Sync/Research/Dissertation/Thesis/record_linkage_scores_gt2.jpg",
        height=5, width=8.5, units='in', dpi=600)
 
 #pick a score to make the cutoff value
 tidy_all_matches_one_per %>%
-  filter(rl_score > 5.5) %>%
+  filter(rl_score > 15) %>%
   nrow()
 
 
