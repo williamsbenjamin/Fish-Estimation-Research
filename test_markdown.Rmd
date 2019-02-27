@@ -1,0 +1,168 @@
+---
+title: "Distributions of Catch by Species in MRIP Data"
+author: "Ben Williams"
+date: "May 7, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+##R Markdown
+
+```{r load packages}
+library(tidyverse)
+library(ggthemes)
+```
+
+The data, make sure psu_id is a character
+
+```{r}
+mrip <- read_csv("data/mrip_tidy2_17.csv",
+                 col_types = cols(psu_id = col_character()))
+
+```
+
+What fish are most often caught?
+
+Get a named vector of the sum of all the fish caught per species
+```{r}
+fish_nums <- mrip %>% 
+  dplyr::select(ends_with("claim")) %>% 
+  colSums() 
+```
+Make it a tibble
+```{r}
+fish_numbers <- tibble(spec = names(fish_nums),
+                       number = unname(fish_nums))
+```
+
+plot the total catch by species
+```{r}
+fish_numbers %>% 
+  ggplot(aes(spec,number))+
+  geom_col()+
+  coord_flip()
+```
+
+That is a bit too hard to decipher, let's keep only species caught at least 100 times in 2017
+```{r}
+fish_numbers %>% 
+  filter(number >= 100) %>% 
+  ggplot(aes(reorder(spec,number),number,fill=spec))+
+  geom_col(show.legend = F)+
+  coord_flip()
+```
+
+
+
+Let's look at the distribution of Red Snapper in the 2017 MRIP data
+
+```{r}
+mrip %>% 
+  ggplot(aes(`RED SNAPPER_claim`)) +
+  geom_histogram(bins=20) +
+  ggtitle("2017 MRIP Red Snapper Catch")
+```
+
+What does the plot look like without *zero's*
+
+```{r}
+mrip %>% 
+  filter(`RED SNAPPER_claim` > 0) %>% 
+  ggplot(aes(`RED SNAPPER_claim`)) +
+  geom_histogram(bins=20) +
+  ggtitle("2017 MRIP Red Snapper Catch > 0")
+```
+
+Now Vermillion Snapper
+```{r}
+mrip %>% 
+  ggplot(aes(`VERMILION SNAPPER_claim`)) +
+  geom_histogram(bins=20) +
+  ggtitle("2017 MRIP Vermillion Snapper Catch")
+```
+
+Now,exclude the *zero's*
+
+```{r}
+mrip %>%
+  filter(`VERMILION SNAPPER_claim` > 0) %>% 
+  ggplot(aes(`VERMILION SNAPPER_claim`)) +
+  geom_histogram(bins=20) +
+  ggtitle("2017 MRIP Vermillion Snapper Catch > 0")
+```
+
+Lane Snapper
+```{r}
+mrip %>% 
+  ggplot(aes(`LANE SNAPPER_claim`)) +
+  geom_histogram(bins=20) +
+  ggtitle("2017 MRIP Lane Snapper Catch")
+```
+
+Now,exclude the *zero's*
+
+```{r}
+mrip %>%
+  filter(`LANE SNAPPER_claim` > 0) %>% 
+  ggplot(aes(`LANE SNAPPER_claim`)) +
+  geom_histogram(bins=20) +
+  ggtitle("2017 MRIP Vermillion Snapper Catch > 0")
+```
+
+White Grunt
+```{r}
+mrip %>% 
+  ggplot(aes(`WHITE GRUNT_claim`)) +
+  geom_histogram(bins=20) +
+  ggtitle("2017 MRIP WHITE GRUNT Catch")
+```
+
+Now,exclude the *zero's*
+
+```{r}
+mrip %>%
+  filter(`WHITE GRUNT_claim` > 0) %>% 
+  ggplot(aes(`WHITE GRUNT_claim`)) +
+  geom_histogram(bins=20) +
+  ggtitle("2017 MRIP White Grunt Catch > 0")
+```
+
+Spanish Mackerel
+```{r}
+mrip %>% 
+  ggplot(aes(`SPANISH MACKEREL_claim`)) +
+  geom_histogram(bins=20) +
+  ggtitle("2017 MRIP SPANISH MACKEREL Catch")
+```
+
+Now,exclude the *zero's*
+
+```{r}
+mrip %>%
+  filter(`SPANISH MACKEREL_claim` > 0) %>% 
+  ggplot(aes(`SPANISH MACKEREL_claim`)) +
+  geom_histogram(bins=20) +
+  ggtitle("2017 MRIP SPANISH MACKEREL Catch > 0")
+```
+
+White Grunt
+```{r}
+mrip %>% 
+  ggplot(aes(`RED PORGY_claim`)) +
+  geom_histogram(bins=20) +
+  ggtitle("2017 MRIP RED PORGY Catch")
+```
+
+Now,exclude the *zero's*
+
+```{r}
+mrip %>%
+  filter(`RED PORGY_claim` > 0) %>% 
+  ggplot(aes(`RED PORGY_claim`)) +
+  geom_histogram(bins=20) +
+  ggtitle("2017 MRIP RED PORGY Catch > 0")
+```
+
